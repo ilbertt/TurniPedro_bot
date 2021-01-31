@@ -124,7 +124,7 @@ class MessageHandler(telepot.aio.helper.ChatHandler):
                     await self.sender.sendMessage('Non hai le autorizzazioni per impostare il giorno iniziale')
         self._count += 1
 
-TOKEN = '1445371219:AAHcGxxqYiyioSEhjPo2vLVPHaprJ21WOUw'
+TOKEN = '<token-here>'
 
 bot = telepot.aio.DelegatorBot(TOKEN, [
     pave_event_space()(
