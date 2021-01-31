@@ -75,41 +75,21 @@ def format_response(day, shift, end_shift, next_shift):
     
     return resp_this_shift + '\n' + resp_next_shift
 
-def on_chat_message(msg):
-    content_type, chat_type, chat_id = telepot.glance(msg)
-    if content_type == 'text' : 
-        dic = bot.getChat(chat_id)
-        text = msg['text'].lower()
-        if '/start' in text : 
-            try:
-                nome = dic['first_name']
-            except Exception as e:
-                nome = ''
-        else:
-            shift_explain = 'non so rispondere'
-            if 'oggi' in text:
-                t = datetime.today()
-                shift_explain = tell_shift('oggi', t)
-            elif 'domani' in text:
-                t = datetime.today()
-                t = t + timedelta(1)
-                shift_explain = tell_shift('domani', t)
-            bot.sendMessage(chat_id, shift_explain)
-
-class MessageCounter(telepot.aio.helper.ChatHandler):
+class MessageHandler(telepot.aio.helper.ChatHandler):
     def __init__(self, *args, **kwargs):
-        super(MessageCounter, self).__init__(*args, **kwargs)
+        super(MessageHandler, self).__init__(*args, **kwargs)
         self._count = 0
 
     async def on_chat_message(self, msg):
         print('handling message #', self._count)
         content_type, chat_type, chat_id = telepot.glance(msg)
         if content_type == 'text' : 
-            dic = await bot.getChat(chat_id)
-            text = msg['text'].lower()
+            chatInfo = await bot.getChat(chat_id)
+            print(chatInfo)
+            text = msg['text'].lower().strip()
             if '/start' in text : 
                 try:
-                    nome = dic['first_name']
+                    nome = chatInfo['first_name']
                 except Exception as e:
                     nome = ''
                 await self.sender.sendMessage('Ciao '+nome+'!\nBenvenuto in Turni Pedro, ora non ha più scampo!')
@@ -126,13 +106,30 @@ class MessageCounter(telepot.aio.helper.ChatHandler):
                     await self.sender.sendMessage(shift_explain)
                 elif 'dio' in text:
                     await self.sender.sendMessage('dio non esiste, ma se esiste è un sadico di merda')
+                elif 'start' in text:
+                    if chatInfo['username'] == 'ilbert98':
+                        try:
+                            t = text[5:].strip()    # remoce 'start' from string, keep only the date
+                            t += ' 07:00:00'
+                            START = datetime.strptime(t, '%Y-%m-%d %H:%M:%S')
+                            with open('start.txt', 'w') as start_file:
+                                start_file.write(str(START))
+                            await self.sender.sendMessage('Inizio impostato per il '+str(START))
+                        except Exception as e:
+                            print('ERROR', e)
+                            await self.sender.sendMessage("C'è stato un errore:\n"+str(e))
+                        return
+                    await self.sender.sendMessage('Non hai le autorizzazioni per impostare il giorno iniziale')
         self._count += 1
 
-TOKEN = '<token-here>'
+TOKEN = '1445371219:AAHcGxxqYiyioSEhjPo2vLVPHaprJ21WOUw'
+
+with open('start.txt', 'r') as start_file:
+    START = datetime.strptime(start_file.readline(), '%Y-%m-%d %H:%M:%S')
 
 bot = telepot.aio.DelegatorBot(TOKEN, [
     pave_event_space()(
-        per_chat_id(), create_open, MessageCounter, timeout=10),
+        per_chat_id(), create_open, MessageHandler, timeout=10),
 ])
 
 loop = asyncio.get_event_loop()
