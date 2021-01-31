@@ -7,6 +7,8 @@ import asyncio
 START = datetime(2021,1,17,7,0,0)
 
 def tell_shift(day, date):
+    with open('start.txt', 'r') as start_file:
+        START = datetime.strptime(start_file.readline(), '%Y-%m-%d %H:%M:%S')
     delta = date - START
     next_shift = ''
     end_shift = ''
@@ -123,9 +125,6 @@ class MessageHandler(telepot.aio.helper.ChatHandler):
         self._count += 1
 
 TOKEN = '1445371219:AAHcGxxqYiyioSEhjPo2vLVPHaprJ21WOUw'
-
-with open('start.txt', 'r') as start_file:
-    START = datetime.strptime(start_file.readline(), '%Y-%m-%d %H:%M:%S')
 
 bot = telepot.aio.DelegatorBot(TOKEN, [
     pave_event_space()(
