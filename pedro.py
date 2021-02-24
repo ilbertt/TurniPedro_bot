@@ -13,7 +13,7 @@ def tell_shift(day, date):
     next_shift = ''
     end_shift = ''
     delta_days = delta.days%8
-    print(START, delta.days, delta.days//16, delta_days)
+
     if delta_days in [0,1]:
         #print('adesso lavora al turno di mattina')
         shift = '*mattina*'
@@ -83,7 +83,7 @@ class MessageHandler(telepot.aio.helper.ChatHandler):
         content_type, chat_type, chat_id = telepot.glance(msg)
         if content_type == 'text' : 
             chatInfo = await bot.getChat(chat_id)
-            print(chatInfo)
+            print('From user:', chatInfo['username'])
             text = msg['text'].lower().strip()
             if '/start' in text : 
                 try:
