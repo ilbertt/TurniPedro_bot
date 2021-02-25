@@ -83,7 +83,10 @@ class MessageHandler(telepot.aio.helper.ChatHandler):
         content_type, chat_type, chat_id = telepot.glance(msg)
         if content_type == 'text' : 
             chatInfo = await bot.getChat(chat_id)
-            print('From user:', chatInfo['username'])
+            try: 
+                print('From user:', chatInfo['username'])
+            except Exception as e:
+                print('From user without username')
             text = msg['text'].lower().strip()
             if '/start' in text : 
                 try:
