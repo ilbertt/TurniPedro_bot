@@ -105,7 +105,7 @@ class MessageHandler(telepot.aio.helper.ChatHandler):
                     t = t + timedelta(1)
                     shift_explain = tell_shift('domani', t)
                     await self.sender.sendMessage(shift_explain, parse_mode='markdown')
-                elif ' dio ' in text:
+                elif ' dio ' or '/dio' in text:
                     await self.sender.sendMessage('dio non esiste, ma se esiste è un sadico di merda')
                 elif 'start' in text:
                     if chatInfo['username'] == 'ilbert98':
