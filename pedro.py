@@ -6,7 +6,6 @@ import asyncio
 
 START = datetime(2021,2,22,7,0,0)
 
-
 '''
 SHIFTS:
 M=morning
@@ -39,6 +38,8 @@ shift_array = [
     '🏠',
     '🏠',
 ]
+
+italian_days = ['Dom', 'Lun', 'Mar', 'Mer', 'Gio', 'Ven', 'Sab']
 
 def tell_shift(day, date):
     '''
@@ -141,7 +142,7 @@ def all_shift():
         increment = t + timedelta(i)
         delta = increment - START
         delta_days = delta.days % 19
-        resp = resp + '_' + increment.strftime("%d/%m") + '_: ' + shift_array[delta_days] + '\n'
+        resp = resp + '_' + italian_days[int(increment.strftime("%w"))] + '_ ' + increment.strftime("%d/%m") + ': ' + shift_array[delta_days] + '\n'
 
     return resp
 
