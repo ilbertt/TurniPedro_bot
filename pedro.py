@@ -6,6 +6,40 @@ import asyncio
 
 START = datetime(2021,2,22,7,0,0)
 
+
+'''
+SHIFTS:
+M=morning
+A=afternoon
+N=night
+_=home
+
+|M|M|A|A|N|N|_|_|_|_|M|M|A|A|N|N|_|_|_|
+
+TOT: 19 days
+'''
+shift_array = [
+    '🔨 *7 - 15*',
+    '🔨 *7 - 15*',
+    '🔨 *15 - 23*',
+    '🔨 *15 - 23*',
+    '🔨 *23 - 7*',
+    '🔨 *23 - 7*',
+    '🏠',
+    '🏠',
+    '🏠',
+    '🏠',
+    '🔨 *7 - 15*',
+    '🔨 *7 - 15*',
+    '🔨 *15 - 23*',
+    '🔨 *15 - 23*',
+    '🔨 *23 - 7*',
+    '🔨 *23 - 7*',
+    '🏠',
+    '🏠',
+    '🏠',
+]
+
 def tell_shift(day, date):
     '''
     SHIFTS:
@@ -86,6 +120,31 @@ def format_response(day, shift, end_shift, next_shift):
     
     return resp_this_shift + '\n' + resp_next_shift
 
+def all_shift():
+    '''
+    SHIFTS:
+    M=morning
+    A=afternoon
+    N=night
+    _=home
+    
+    |M|M|A|A|N|N|_|_|_|_|M|M|A|A|N|N|_|_|_|
+
+    TOT: 19 days
+    '''
+    with open('start.txt', 'r') as start_file:
+        START = datetime.strptime(start_file.readline(), '%Y-%m-%d %H:%M:%S') 
+    
+    resp = ''
+    t = datetime.today()
+    for i in range(7):
+        increment = t + timedelta(i)
+        delta = increment - START
+        delta_days = delta.days % 19
+        resp = resp + '_' + increment.strftime("%d/%m") + '_: ' + shift_array[delta_days] + '\n'
+
+    return resp
+
 class MessageHandler(telepot.aio.helper.ChatHandler):
     def __init__(self, *args, **kwargs):
         super(MessageHandler, self).__init__(*args, **kwargs)
@@ -117,6 +176,9 @@ class MessageHandler(telepot.aio.helper.ChatHandler):
                     t = datetime.today()
                     t = t + timedelta(1)
                     shift_explain = tell_shift('domani', t)
+                    await self.sender.sendMessage(shift_explain, parse_mode='markdown')
+                elif 'tabella' in text:
+                    shift_explain = all_shift()
                     await self.sender.sendMessage(shift_explain, parse_mode='markdown')
                 elif (' dio ' in text) or ('/dio' in text):
                     await self.sender.sendMessage('dio non esiste, ma se esiste è un sadico di merda')
