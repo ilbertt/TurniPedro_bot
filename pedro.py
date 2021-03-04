@@ -4,47 +4,60 @@ from telepot.aio.loop import MessageLoop
 from telepot.aio.delegate import pave_event_space, per_chat_id, create_open
 import asyncio
 
-START = datetime(2021,1,17,7,0,0)
+START = datetime(2021,2,22,7,0,0)
 
 def tell_shift(day, date):
+    '''
+    SHIFTS:
+    M=morning
+    A=afternoon
+    N=night
+    _=home
+    
+    |M|M|A|A|N|N|_|_|_|_|M|M|A|A|N|N|_|_|_|
+
+    TOT: 19 days
+    '''
     with open('start.txt', 'r') as start_file:
         START = datetime.strptime(start_file.readline(), '%Y-%m-%d %H:%M:%S')
     delta = date - START
     next_shift = ''
     end_shift = ''
-    delta_days = delta.days%8
+    delta_days = delta.days % 19
 
-    if delta_days in [0,1]:
+    print(delta_days)
+
+    if delta_days in [0,1,10,11]:
         #print('adesso lavora al turno di mattina')
         shift = '*mattina*'
         end_shift = 'dalle *7* alle *15*'
 
-        if delta_days==0:
+        if delta_days in [0,10]:
             next_shift = 'lavora di mattina, dalle *7* alle *15*'
         else:
             next_shift = 'lavora di pomeriggio, dalle *15* alle *23*'
-    elif delta_days in [2,3]:
+    elif delta_days in [2,3,12,13]:
         #print(day+' lavora al turno di sera')
         shift = '*pomeriggio*'
         end_shift = 'dalle *15* alle *23*'
         
-        if delta_days==2:
+        if delta_days in [2,12]:
             next_shift = 'lavora di *pomeriggio*, dalle *15* alle *23*'
         else:
             next_shift = 'lavora di *notte*, delle *23* alle *7* del mattino dopo'
-    elif delta_days in [4,5]:
+    elif delta_days in [4,5,14,15]:
         #print(day+' lavora al turno di notte')
         shift = '*notte*'
         end_shift = 'dalle *23* alle *7*'
         
-        if delta_days==4:
+        if delta_days in [4,14]:
             next_shift = 'lavora di *notte*, delle *23* alle *7* del mattino dopo'
         else:
             next_shift = 'è a casa'
-    elif delta_days in [6,7]:
+    elif delta_days in [6,7,8,9,16,17,18]:
         #print(day+' non lavora')
         shift = 'none'
-        if delta_days==6:
+        if delta_days in [6,7,8,16,17]:
             next_shift = 'è a casa'
         else:
             next_shift = 'lavora di *mattina*, dalle *7* alle *15*'
