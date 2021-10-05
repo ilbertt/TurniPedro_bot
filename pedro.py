@@ -177,7 +177,7 @@ class Pedro:
             date = datetime.today().weekday()
         elif day == 'domani':
             date = datetime.today().weekday() + 1
-        
+        import pandas as pd
         out = "\nLezioni di oggi:\n"
         if date == 5 or date == 6:
             return "Non ha lezioni nel weekend"
