@@ -158,3 +158,33 @@ class Pedro:
     
     def dio(self):
         return 'dio non esiste, ma se esiste è un *sadico di merda*'
+    
+    def grigliata(self):
+        return "Domani sera grigliata da Pedro, offre lui."
+
+    def university_day(self, day):
+        """
+        Day of the week
+        Monday 0
+        Tuesday 1
+        Wednesday 2
+        Thursday 3
+        Friday 4
+        Saturday 5
+        Sunday 6
+        """
+        if day == 'oggi':
+            date = datetime.today().weekday()
+        elif day == 'domani':
+            date = datetime.today().weekday() + 1
+        
+        out = "\nLezioni di oggi:\n"
+        if date == 5 or date == 6:
+            return "Non ha lezioni nel weekend"
+        for i in range(len(schedule.iloc[1:, date+1])):
+            if schedule.iloc[i, date+1] != "free":
+                out += (schedule.time[i] + "\t"+ schedule.iloc[i, date+1] + "\n")
+        return out 
+
+
+
