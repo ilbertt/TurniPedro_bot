@@ -32,16 +32,15 @@ async def send_welcome(message: types.Message):
 async def send_reply(message: types.Message):
     shift_explain = pedro.tell_shift('oggi')
     university = pedro.university_day('oggi')
-    await message.answer(shift_explain, parse_mode=types.ParseMode.MARKDOWN)
-    await message.answer(university, parse_mode=types.ParseMode.MARKDOWN)
+
+    await message.answer(shift_explain+university, parse_mode=types.ParseMode.MARKDOWN)
 
 # handle command '/domani'
 @dp.message_handler(commands=['domani'])
 async def send_reply(message: types.Message):
     shift_explain = pedro.tell_shift('domani')
     university = pedro.university_day('domani')
-    await message.answer(shift_explain, parse_mode=types.ParseMode.MARKDOWN)
-    await message.answer(university, parse_mode=types.ParseMode.MARKDOWN)
+    await message.answer(shift_explain+university, parse_mode=types.ParseMode.MARKDOWN)
 
 # handle command '/tabella'
 @dp.message_handler(commands=['tabella'])
@@ -53,7 +52,7 @@ async def send_reply(message: types.Message):
 async def send_reply(message: types.Message):
     await message.answer(pedro.dio(), parse_mode=types.ParseMode.MARKDOWN)
 
-# handle command '/dio'
+# handle command '/grigliata'
 @dp.message_handler(commands=['grigliata'])
 async def send_reply(message: types.Message):
     await message.answer(pedro.grigliata(), parse_mode=types.ParseMode.MARKDOWN)

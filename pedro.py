@@ -131,7 +131,7 @@ class Pedro:
             resp_this_shift = '_Domani_ '+resp_this_shift
             resp_next_shift += '_Dopodomani_ '+next_shift
         
-        return resp_this_shift + '\n' + resp_next_shift
+        return "💼 *Lavoro:*\n" + resp_this_shift + '\n' + resp_next_shift
 
     def all_shift(self):
         '''
@@ -177,13 +177,12 @@ class Pedro:
             date = datetime.today().weekday()
         elif day == 'domani':
             date = datetime.today().weekday() + 1
-            
         import pandas as pd
         schedule=pd.read_excel('orariuni.xlsx')
 
-        out = "\nLezioni di oggi:\n"
+        out = "\n\n📚 *Università*:\n"
         if date == 5 or date == 6:
-            return "Non ha lezioni nel weekend"
+            return "🏠 Non ha lezioni nel weekend!"
         for i in range(len(schedule.iloc[1:, date+1])):
             if schedule.iloc[i, date+1] != "free":
                 out += (schedule.time[i] + "\t"+ schedule.iloc[i, date+1] + "\n")
