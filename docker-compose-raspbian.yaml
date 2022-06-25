@@ -1,0 +1,9 @@
+version: '3.8'
+services:
+  turnipedro_bot:
+    build:
+      context: .
+      dockerfile: raspbian.Dockerfile
+    volumes:
+      - ./start.txt:/app/start.txt
+      - ./orariuni.xlsx:/app/orariuni.xlsx
